@@ -1,4 +1,5 @@
 venv/
+.venv/
 .env
 # Large numpy data files - regenerate from raw images instead
 *.npy
