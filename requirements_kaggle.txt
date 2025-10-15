@@ -1,0 +1,25 @@
+# Kaggle TPU v5e-8 Requirements
+# Most packages are pre-installed in Kaggle, only specify versions if needed
+
+# Core ML Libraries (usually pre-installed in Kaggle)
+tensorflow>=2.15.0
+tensorflow-hub>=0.16.0
+transformers>=4.35.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+pillow>=10.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.13.0
+
+# Utilities
+tqdm>=4.66.0
+scikit-learn>=1.3.0
+
+# Note: Kaggle notebooks come with most packages pre-installed.
+# You typically don't need to install these manually.
+# Use: !pip install <package> only if a specific package is missing.
