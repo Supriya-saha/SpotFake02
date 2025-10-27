@@ -1,0 +1,52 @@
+# Google Colab TPU Requirements
+# Optimized for Google Colab environment with TPU support
+# Many packages are pre-installed in Colab, only specify what needs updating/adding
+
+# Core ML Libraries
+# Note: TensorFlow is pre-installed in Colab, but specify version for TPU compatibility
+tensorflow>=2.15.0
+tensorflow-hub>=0.16.0
+keras>=3.0.0
+
+# NLP Models
+transformers>=4.35.0
+tokenizers>=0.15.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+pillow>=10.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.13.0
+
+# Progress bars
+tqdm>=4.66.0
+
+# Machine Learning Utils
+scikit-learn>=1.3.0
+
+# For better notebook experience
+ipywidgets>=8.1.0
+
+# Additional utilities (if needed)
+h5py>=3.10.0  # Usually pre-installed
+scipy>=1.11.0  # Usually pre-installed
+
+# Installation Instructions:
+# =======================
+# In Google Colab, run:
+# !pip install -r requirements_colab.txt
+#
+# For TPU setup, also add to your notebook:
+# import tensorflow as tf
+# resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+# tf.config.experimental_connect_to_cluster(resolver)
+# tf.tpu.experimental.initialize_tpu_system(resolver)
+# strategy = tf.distribute.TPUStrategy(resolver)
+#
+# Then wrap model creation with:
+# with strategy.scope():
+#     model = get_news_model(params_final)
