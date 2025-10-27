@@ -3,6 +3,7 @@ venv/
 .env
 # Large numpy data files - regenerate from raw images instead
 *.npy
+*.h5
 # Optional: ignore the entire images directories if they're too large
 # dataset/twitter/images_train/
 # dataset/twitter/images_test/
