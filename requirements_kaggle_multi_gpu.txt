@@ -1,0 +1,32 @@
+# Kaggle Multi-GPU Requirements (2x T4)
+# Install in Kaggle notebook: !pip install -r requirements_kaggle.txt
+
+# Core ML framework (Kaggle has TensorFlow pre-installed, but specify for completeness)
+tensorflow>=2.15.0
+tensorflow-hub>=0.15.0
+
+# NLP
+transformers>=4.35.0
+
+# Image processing
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Metrics & visualization
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+
+# Progress bars
+tqdm>=4.66.0
+
+# Note: Kaggle environment already includes many of these packages
+# Only install if you encounter import errors
+
+# Multi-GPU specific notes:
+# - No additional packages needed for TensorFlow MirroredStrategy
+# - GPU drivers are pre-configured in Kaggle
+# - Just enable "GPU T4 x2" in Settings → Accelerator
