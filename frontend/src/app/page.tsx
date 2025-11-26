@@ -35,6 +35,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<PredictionResult | null>(null)
   const [error, setError] = useState<string>("")
+  const [showCamera, setShowCamera] = useState(false)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -43,6 +44,19 @@ export default function Home() {
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCameraCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setImageFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+        setShowCamera(false)
       }
       reader.readAsDataURL(file)
     }
@@ -146,6 +160,24 @@ export default function Home() {
                     onChange={handleImageChange}
                   />
                 </Label>
+                
+                {/* Camera Capture Button */}
+                <div className="flex gap-2">
+                  <Label htmlFor="camera-capture" className="flex-1 cursor-pointer">
+                    <div className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/50 rounded-lg p-3 text-center transition-colors">
+                      <span className="text-sm font-medium">📷 Capture Photo</span>
+                    </div>
+                    <input
+                      id="camera-capture"
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      onChange={handleCameraCapture}
+                    />
+                  </Label>
+                </div>
+                
                 {imageFile && (
                   <p className="text-sm text-gray-100">Selected: {imageFile.name}</p>
                 )}
