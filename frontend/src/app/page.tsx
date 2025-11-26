@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 
-const API_URL = "http://localhost:8000"
+const API_URL = "https://unhawked-jamarion-noncleistogamous.ngrok-free.dev"
 
 interface PredictionResult {
   verdict: "REAL" | "FAKE"
@@ -90,8 +90,15 @@ export default function Home() {
       
       <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
+        <div className="text-center mb-12 relative">
+          {/* Animated dots background */}
+          <div className="dots-background">
+            {[...Array(50)].map((_, i) => (
+              <div key={i} className="dot"></div>
+            ))}
+          </div>
+          
+          <div className="flex items-center justify-center mb-4 relative z-10">
             <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg mr-4 flex items-center justify-center">
               <span className="text-2xl font-bold text-white">F</span>
             </div>
@@ -99,7 +106,7 @@ export default function Home() {
               Fake News Detector
             </h1>
           </div>
-          <p className="text-xl text-gray-100">Advanced Multimodal Fake News Detection</p>
+          <p className="text-xl text-gray-100 relative z-10">Advanced Multimodal Fake News Detection</p>
         </div>
 
         {/* Main Content */}
@@ -419,19 +426,7 @@ export default function Home() {
                 </Card>
               )}
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-center gap-4 mt-8">
-              <Button className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/50 button-glow">
-                Download Report
-              </Button>
-              <Button className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/50 button-glow">
-                Start New Analysis
-              </Button>
-              <Button className="bg-gray-700/50 hover:bg-gray-700/70 text-gray-300 border border-gray-600 button-glow">
-                Provide Feedback
-              </Button>
-            </div>
+            
           </div>
         )}
       </div>

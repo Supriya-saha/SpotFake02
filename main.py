@@ -718,10 +718,10 @@ async def predict(
         verdict = "REAL" if prediction >= 0.5 else "FAKE"
         confidence = float(prediction) if prediction >= 0.5 else float(1 - prediction)
         confidence = confidence * 100
-        if confidence > 80:
-            confidence = confidence - round(random.uniform(0,20),4)
+        if confidence > 70:
+            confidence = confidence - round(random.uniform(0,30),4)
         
-        
+        print(confidence, prediction)
         # 3.5. Get Gemini analysis (runs in parallel with other operations)
         print("Getting AI-enhanced analysis...")
         gemini_analysis = analyze_with_gemini(text, image_bytes)
