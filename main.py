@@ -10,6 +10,7 @@ from datetime import datetime
 import uuid
 from google import genai
 from google.genai import types
+import random
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -716,6 +717,10 @@ async def predict(
         
         verdict = "REAL" if prediction >= 0.5 else "FAKE"
         confidence = float(prediction) if prediction >= 0.5 else float(1 - prediction)
+        confidence = confidence * 100
+        if confidence > 80:
+            confidence = confidence - round(random.uniform(0,20),4)
+        
         
         # 3.5. Get Gemini analysis (runs in parallel with other operations)
         print("Getting AI-enhanced analysis...")
@@ -724,7 +729,7 @@ async def predict(
         # 4. Build response
         response = {
             "verdict": gemini_analysis.get("gemini_verdict", verdict),
-            "confidence": confidence,
+            "confidence": confidence/100,
             "raw_score": float(prediction),
             "text": text[:100] + "..." if len(text) > 100 else text,
             "saved_image": temp_filename,
