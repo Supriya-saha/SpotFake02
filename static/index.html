@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotFake - Fake News Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .upload-box {
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+
+        .upload-box:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .file-input-label:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-name {
+            margin-top: 15px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .options {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper label {
+            font-size: 1em;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .verdict-box {
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        .verdict-box.real {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .verdict-box.fake {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .verdict-box h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .verdict-box .confidence {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .result-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            animation: fadeIn 0.7s;
+        }
+
+        .result-card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .result-card img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .shap-tokens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .token {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .token.positive {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .token.negative {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .token:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #c62828;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .upload-section, .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .options {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 SpotFake</h1>
+            <p>AI-Powered Fake News Detection with Explainability</p>
+        </div>
+
+        <div class="content">
+            <div id="predictionForm">
+                <div class="upload-section">
+                    <div class="upload-box">
+                        <h3>📸 Upload Image</h3>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="imageInput" accept="image/*" required>
+                            <label for="imageInput" class="file-input-label">Choose Image</label>
+                        </div>
+                        <div class="file-name" id="imageName">No file chosen</div>
+                        <img id="imagePreview" class="preview-image" style="display: none;">
+                    </div>
+
+                    <div class="upload-box">
+                        <h3>📝 Enter Text</h3>
+                        <textarea 
+                            id="textInput" 
+                            rows="8" 
+                            placeholder="Enter the news text content here..."
+                            required
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="options">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="gradcamCheck" checked>
+                        <label for="gradcamCheck">🎨 Include Grad-CAM Visualization</label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="shapCheck">
+                        <label for="shapCheck">📊 Include SHAP Explanation (slower, ~30s)</label>
+                    </div>
+                </div>
+
+                <button type="button" class="submit-btn" id="analyzeBtn">Analyze News</button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing... This may take a few seconds</p>
+                <p id="shapWarning" style="color: #667eea; margin-top: 10px; display: none;">
+                    ⏳ SHAP analysis is running, this will take 20-40 seconds...
+                </p>
+            </div>
+
+            <div class="error" id="error"></div>
+
+            <div class="results" id="results">
+                <div class="verdict-box" id="verdictBox">
+                    <h2 id="verdictText"></h2>
+                    <p class="confidence" id="confidenceText"></p>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-card" id="gradcamCard" style="display: none;">
+                        <h3>🎨 Grad-CAM Visualization</h3>
+                        <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">
+                            Shows which image regions influenced the model's decision
+                        </p>
+                        <img id="gradcamImage" alt="Grad-CAM Heatmap">
+                    </div>
+
+                    <div class="result-card" id="shapCard" style="display: none;">
+                        <h3>📊 SHAP Token Importance</h3>
+                        <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">
+                            Top influential words in the text
+                        </p>
+                        <div class="shap-tokens" id="shapTokens"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        
+        // Image preview
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('imageName').textContent = file.name;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission - using click handler instead of form submit
+        document.getElementById('analyzeBtn').addEventListener('click', async function() {
+            console.log('Analyze button clicked');
+            
+            // Get form data
+            const imageFile = document.getElementById('imageInput').files[0];
+            const text = document.getElementById('textInput').value;
+            const includeGradcam = document.getElementById('gradcamCheck').checked;
+            const includeShap = document.getElementById('shapCheck').checked;
+            
+            if (!imageFile || !text) {
+                showError('Please provide both image and text');
+                return;
+            }
+            
+            console.log('Image:', imageFile.name);
+            console.log('Text length:', text.length);
+            console.log('Grad-CAM:', includeGradcam);
+            console.log('SHAP:', includeShap);
+            
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('image', imageFile);
+            formData.append('text', text);
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('analyzeBtn').disabled = true;
+            
+            // Show SHAP warning if enabled
+            if (includeShap) {
+                document.getElementById('shapWarning').style.display = 'block';
+            }
+            
+            try {
+                // Make API request
+                const url = `${API_URL}/predict?include_gradcam=${includeGradcam}&include_shap=${includeShap}`;
+                console.log('Requesting:', url);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    let errorMessage = 'Prediction failed';
+                    try {
+                        const error = await response.json();
+                        errorMessage = error.detail || errorMessage;
+                    } catch (e) {
+                        errorMessage = `Server error: ${response.status}`;
+                    }
+                    throw new Error(errorMessage);
+                }
+                
+                const result = await response.json();
+                console.log('Result received:', result);
+                
+                displayResults(result, includeGradcam, includeShap);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('shapWarning').style.display = 'none';
+                document.getElementById('analyzeBtn').disabled = false;
+            }
+        });
+
+        function displayResults(result, hasGradcam, hasShap) {
+            console.log('Displaying results:', result);
+            
+            // Show results section
+            document.getElementById('results').style.display = 'block';
+            
+            // Display verdict
+            const verdictBox = document.getElementById('verdictBox');
+            const verdictText = document.getElementById('verdictText');
+            const confidenceText = document.getElementById('confidenceText');
+            
+            const verdictClass = result.verdict.toLowerCase();
+            verdictBox.className = 'verdict-box ' + verdictClass;
+            verdictText.textContent = result.verdict;
+            confidenceText.textContent = `Confidence: ${(result.confidence * 100).toFixed(1)}%`;
+            
+            console.log('Verdict displayed:', result.verdict);
+            
+            // Display Grad-CAM if available
+            if (hasGradcam && result.gradcam_image) {
+                console.log('Displaying Grad-CAM image');
+                const gradcamCard = document.getElementById('gradcamCard');
+                const gradcamImage = document.getElementById('gradcamImage');
+                gradcamImage.src = 'data:image/png;base64,' + result.gradcam_image;
+                gradcamCard.style.display = 'block';
+            } else {
+                console.log('No Grad-CAM to display');
+                document.getElementById('gradcamCard').style.display = 'none';
+            }
+            
+            // Display SHAP if available
+            if (hasShap && result.shap_explanation && result.shap_explanation.length > 0) {
+                console.log('Displaying SHAP tokens:', result.shap_explanation.length);
+                const shapCard = document.getElementById('shapCard');
+                const shapTokens = document.getElementById('shapTokens');
+                shapTokens.innerHTML = '';
+                
+                result.shap_explanation.forEach(item => {
+                    const token = document.createElement('div');
+                    token.className = 'token ' + (item.importance > 0 ? 'positive' : 'negative');
+                    token.textContent = `${item.token} (${item.importance.toFixed(3)})`;
+                    token.title = `Importance: ${item.importance.toFixed(4)}`;
+                    shapTokens.appendChild(token);
+                });
+                
+                shapCard.style.display = 'block';
+            } else {
+                console.log('No SHAP to display');
+                document.getElementById('shapCard').style.display = 'none';
+            }
+            
+            // Scroll to results
+            setTimeout(() => {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+            
+            console.log('Results displayed successfully');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = '❌ Error: ' + message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

@@ -8,3 +8,5 @@ venv/
 # dataset/twitter/images_train/
 # dataset/twitter/images_test/
 __pycache__/
+temp/
+node_modules/
