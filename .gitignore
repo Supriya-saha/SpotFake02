@@ -7,3 +7,4 @@ venv/
 # Optional: ignore the entire images directories if they're too large
 # dataset/twitter/images_train/
 # dataset/twitter/images_test/
+__pycache__/
