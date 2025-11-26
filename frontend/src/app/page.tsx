@@ -127,14 +127,11 @@ export default function Home() {
           </div>
           
           <div className="flex items-center justify-center mb-4 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg mr-4 flex items-center justify-center">
-              <span className="text-2xl font-bold text-white">F</span>
-            </div>
-            <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
               Fake News Detector
             </h1>
           </div>
-          <p className="text-xl text-gray-100 relative z-10">Advanced Multimodal Fake News Detection</p>
+          <p className="text-base sm:text-lg md:text-xl text-gray-100 relative z-10">Advanced Multimodal Fake News Detection</p>
         </div>
 
         {/* Main Content */}
