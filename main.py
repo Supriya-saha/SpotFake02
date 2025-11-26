@@ -488,7 +488,7 @@ def analyze_with_gemini(text: str, image_bytes: bytes) -> Dict[str, any]:
         )
         
         # Create prompt for news authenticity analysis
-        prompt = f"""Analyze this news post for authenticity. The post contains an image and the following text:
+        prompt = f"""Analyze this news post for authenticity & todays date is 27th November 2025. The post contains an image and the following text:
 
 Text: "{text}"
 
@@ -517,7 +517,7 @@ Be concise and specific. Provide 3-5 reasoning points."""
 
         # Generate analysis using stable Gemini model (matching testing.py)
         response = gemini_client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=os.getenv("GEMMA_MODEL"),
             contents=[
                 prompt,
                 image_part
@@ -554,23 +554,6 @@ Be concise and specific. Provide 3-5 reasoning points."""
             
     except Exception as e:
         error_msg = str(e)
-        
-        # User-friendly error messages for different scenarios
-        if "429" in error_msg or "RESOURCE_EXHAUSTED" in error_msg:
-            print("\n" + "="*70)
-            print("⚠️  GEMINI API RATE LIMIT REACHED")
-            print("="*70)
-            print("The free tier has limited requests. Your ML model prediction")
-            print("will still work - only the enhanced AI reasoning is skipped.")
-            print("\nOptions:")
-            print("  1. Wait ~1 minute and try again")
-            print("  2. Use fewer requests per minute")
-            print("  3. Upgrade to paid tier for higher limits")
-            print("="*70 + "\n")
-        elif "quota" in error_msg.lower():
-            print("\n⚠️  Gemini API quota exceeded. Continuing with ML model only.")
-        else:
-            print(f"\n⚠️  Gemini API error: {error_msg[:150]}")
         
         # Return graceful fallback - prediction continues without Gemini
         return {
@@ -737,10 +720,10 @@ async def predict(
         # 3.5. Get Gemini analysis (runs in parallel with other operations)
         print("Getting AI-enhanced analysis...")
         gemini_analysis = analyze_with_gemini(text, image_bytes)
-        
+        print("Gemini Json", gemini_analysis)
         # 4. Build response
         response = {
-            "verdict": verdict,
+            "verdict": gemini_analysis.get("gemini_verdict", verdict),
             "confidence": confidence,
             "raw_score": float(prediction),
             "text": text[:100] + "..." if len(text) > 100 else text,
