@@ -2,7 +2,7 @@ import random
 from google import genai
 from google.genai import types
 
-# client = genai.Client(api_key="AIzaSyCcVyjZReOnPqPLFcVDDwN70j95MWeu8KI")  # replace after regenerating
+# client = genai.Client(api_key="Nothing")  # replace after regenerating
 
 # # Load image bytes
 # with open("gradcam_sample_0.png", "rb") as f:
