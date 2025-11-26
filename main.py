@@ -555,6 +555,11 @@ Be concise and specific. Provide 3-5 reasoning points."""
             
     except Exception as e:
         error_msg = str(e)
+        print(f"\n{'='*70}")
+        print("❌ API ERROR")
+        print(f"{'='*70}")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error message: {error_msg}")
         
         # Return graceful fallback - prediction continues without Gemini
         return {

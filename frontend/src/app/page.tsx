@@ -102,6 +102,20 @@ export default function Home() {
       {/* Animated Grid Background */}
       <div className="grid-background"></div>
       
+      {/* Floating Bubbles */}
+      <div className="bubbles">
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+      </div>
+      
       <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
         {/* Header */}
         <div className="text-center mb-12 relative">
@@ -432,20 +446,20 @@ export default function Home() {
                         {result.shap_explanation.map((item, idx) => {
                           const absImportance = Math.abs(item.importance)
                           const isPositive = item.importance > 0
-                          const opacity = Math.min(0.4 + absImportance * 100, 1)
+                          const opacity = Math.min(0.7 + absImportance * 100, 1)
                           
                           return (
                             <div
                               key={idx}
-                              className={`px-4 py-2 rounded-md text-sm font-medium transition-all hover:scale-105 ${
+                              className={`px-4 py-2 rounded-md text-sm font-semibold transition-all hover:scale-105 ${
                                 isPositive
-                                  ? "bg-green-500/30 text-green-300 border border-green-500/50"
-                                  : "bg-red-500/30 text-red-300 border border-red-500/50"
+                                  ? "bg-green-500/40 text-green-200 border border-green-400/60"
+                                  : "bg-red-500/40 text-red-200 border border-red-400/60"
                               }`}
                               style={{ opacity }}
                               title={`Importance: ${item.importance.toFixed(6)}`}
                             >
-                              {item.token} <span className="font-mono text-xs opacity-70">({item.importance.toFixed(4)})</span>
+                              {item.token}
                             </div>
                           )
                         })}
